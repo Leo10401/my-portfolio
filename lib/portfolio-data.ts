@@ -1,6 +1,7 @@
 export const profile = {
   name: 'Ayush Kumar Yadav',
   email: 'kanhayia0004@gmail.com',
+  website: 'https://devtacet.me',
   github: 'https://github.com/Leo10401',
   linkedin: 'https://www.linkedin.com/in/ayush-kumar-yadav-a78840348/',
   resume: '/ayush-kumar-yadav-resume.pdf',

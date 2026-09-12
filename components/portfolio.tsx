@@ -184,7 +184,7 @@ export default function Portfolio() {
         </div>
       </section>
       <section className="contact-section content-shell" id="contact"><p className="eyebrow" data-reveal>HAVE SOMETHING IN MIND?</p><h2 data-reveal style={{ '--d': '.1s' } as React.CSSProperties}>Let&apos;s build something<br /><span>worth putting out there.</span></h2><a className="primary-button" href={`mailto:${profile.email}`} data-reveal style={{ '--d': '.2s' } as React.CSSProperties}>Let&apos;s talk <ArrowUpRight size={20} /></a><a className="contact-email" data-reveal style={{ '--d': '.3s' } as React.CSSProperties} href={`mailto:${profile.email}`}>{profile.email}</a></section>
-    </main><footer className="content-shell"><a className="brand" href="#home">ak<span>.</span></a><p>Built with curiosity. Crafted with care.</p><span>© {new Date().getFullYear()} Ayush Kumar Yadav</span><a href="#home" aria-label="Back to top"><ArrowUpRight size={20} /></a></footer>
+    </main><footer className="content-shell"><a className="brand" href="#home">ak<span>.</span></a><p>Built with curiosity. Crafted with care.</p><a href={profile.website} target="_blank" rel="noreferrer">devtacet.me</a><span>© {new Date().getFullYear()} Ayush Kumar Yadav</span><a href="#home" aria-label="Back to top"><ArrowUpRight size={20} /></a></footer>
   </div>
   </>
   )
