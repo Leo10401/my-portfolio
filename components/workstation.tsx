@@ -125,11 +125,19 @@ function CoffeeSteam({ animate }: { animate: boolean }) {
   )
 }
 
-function Desk({ animate }: { animate: boolean }) {
+function Desk({ animate, onLoaded }: { animate: boolean; onLoaded?: () => void }) {
   const group = useRef<THREE.Group>(null)
   const lamp = useRef<THREE.PointLight>(null)
   const led = useRef<THREE.Mesh>(null)
+  const loadedNotified = useRef(false)
+
   useFrame(({ pointer, clock }, delta) => {
+    if (!loadedNotified.current) {
+      loadedNotified.current = true
+      requestAnimationFrame(() => {
+        onLoaded?.()
+      })
+    }
     if (!group.current) return
     const t = clock.elapsedTime
     group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, -0.16 + (animate ? pointer.x * 0.12 : 0), 3, delta)
@@ -429,7 +437,7 @@ function Desk({ animate }: { animate: boolean }) {
   </group>
 }
 
-export default function Workstation() {
+export default function Workstation({ onLoaded }: { onLoaded?: () => void }) {
   const [animate, setAnimate] = useState(false)
   useEffect(() => { const query = matchMedia('(prefers-reduced-motion: reduce)'); const update = () => setAnimate(!query.matches); update(); query.addEventListener('change', update); return () => query.removeEventListener('change', update) }, [])
   return <Canvas shadows camera={{ position: [4.1, 3.1, 7.7], fov: 39 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true }} aria-label="Interactive 3D computer workstation with code, keyboard, plant and desk lamp">
@@ -438,7 +446,7 @@ export default function Workstation() {
     <pointLight position={[2, 2, -3]} intensity={26} color="#ff6c20" />
     <Suspense fallback={<Html center>Loading workstation…</Html>}>
       <Environment preset="city" environmentIntensity={0.35} />
-      <Desk animate={animate} />
+      <Desk animate={animate} onLoaded={onLoaded} />
     </Suspense>
   </Canvas>
 }

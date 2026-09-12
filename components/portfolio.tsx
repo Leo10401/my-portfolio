@@ -5,6 +5,9 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { ArrowRight, ArrowUpRight, ArrowDown, Code2, GitFork as Github, BriefcaseBusiness as Linkedin, Mail, Download, Sun, Moon, Menu, X, Box, Braces, MapPin, Terminal, Cpu, Atom } from 'lucide-react'
 import { profile, projects } from '@/lib/portfolio-data'
+import SiteLoader from './site-loader'
+import { UplinkLoader } from '@designcodeio/threeui'
+import '@designcodeio/threeui/style.css'
 
 const Workstation = dynamic(() => import('./workstation'), { ssr: false, loading: () => <div className="scene-loading">Setting up the workspace<span /></div> })
 const sections = ['Home', 'About', 'Skills', 'Projects', 'Experience', 'Contact']
@@ -15,7 +18,28 @@ export default function Portfolio() {
   const [active, setActive] = useState('home')
   const [progress, setProgress] = useState(0)
   const [scrolled, setScrolled] = useState(false)
+  const [is3DLoaded, setIs3DLoaded] = useState(false)
+  const [loaderComplete, setLoaderComplete] = useState(false)
   const heroArt = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setIs3DLoaded(true)
+    }, 4500)
+    return () => clearTimeout(safetyTimer)
+  }, [])
+
+  useEffect(() => {
+    if (!loaderComplete) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [loaderComplete])
+
   useEffect(() => {
     const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id) }) }, { rootMargin: '-15% 0px -55% 0px' })
     document.querySelectorAll('section[id]').forEach(section => observer.observe(section))
@@ -36,14 +60,17 @@ export default function Portfolio() {
     e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height - 0.5) * 2}`)
   }
   const untilt = (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.setProperty('--mx', '0'); e.currentTarget.style.setProperty('--my', '0') }
-  return <div className={`portfolio ${light ? 'light-mode' : ''} ${scrolled ? 'is-scrolled' : ''}`}>
+  return (
+    <>
+      <SiteLoader isLoaded={is3DLoaded} onComplete={() => setLoaderComplete(true)} />
+      <div className={`portfolio ${light ? 'light-mode' : ''} ${scrolled ? 'is-scrolled' : ''}`}>
     <span className="scroll-progress" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
     <a className="skip-link" href="#home">Skip to content</a>
     <aside className="side-rail"><a className="rail-brand" href="#home" aria-label="Home"><Code2 /></a><nav aria-label="Section shortcuts">{['home', 'about', 'projects', 'contact'].map((s, i) => <a className={active === s ? 'active' : ''} key={s} href={`#${s}`} aria-label={s}>0{i + 1}</a>)}</nav><div className="rail-socials"><a href={profile.github} aria-label="GitHub" target="_blank" rel="noreferrer"><Github /></a><a href={profile.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer"><Linkedin /></a><a href={`mailto:${profile.email}`} aria-label="Email"><Mail /></a></div><span className="rail-bottom">SCROLL TO EXPLORE</span></aside>
     <header className="header"><a className="brand" href="#home" aria-label="Ayush home"><span>{'<'}</span><i>/</i><span>{'>'}</span><small>AYUSH<span>.</span></small></a><nav className="desktop-nav" aria-label="Main navigation">{sections.map(s => <a key={s} className={active === s.toLowerCase() ? 'active' : ''} href={`#${s.toLowerCase()}`}>{s}</a>)}</nav><div className="header-actions"><button className="theme-toggle" onClick={() => setLight(!light)} aria-label={light ? 'Switch to dark theme' : 'Switch to light theme'}><Sun size={18} /><span className="toggle-track"><span /></span><Moon size={16} /></button><a className="talk-button" href="#contact">Let&apos;s Talk <ArrowUpRight size={16} /></a><button className="menu-button" aria-label={menu ? 'Close navigation' : 'Open navigation'} aria-expanded={menu} onClick={() => setMenu(!menu)}>{menu ? <X /> : <Menu />}</button></div>{menu && <nav className="mobile-nav" aria-label="Mobile navigation">{sections.map(s => <a key={s} href={`#${s.toLowerCase()}`} onClick={() => setMenu(false)}>{s}</a>)}</nav>}</header>
     <main>
       <section className="hero" id="home"><div className="hero-copy"><p className="eyebrow rise" style={{ '--d': '0s' } as React.CSSProperties}><span /> HELLO, I&apos;M</p><h1 className="rise" style={{ '--d': '.1s' } as React.CSSProperties}>Ayush Kumar<br /><span>Yadav<span className="name-dot">.</span></span></h1><p className="hero-role rise" style={{ '--d': '.22s' } as React.CSSProperties}>Full Stack <span>&</span> Mobile Developer</p><p className="hero-description rise" style={{ '--d': '.32s' } as React.CSSProperties}>I turn complex problems into thoughtful digital experiences. Clean code, a curious mind, and a passion for building things that matter.</p><div className="hero-actions rise" style={{ '--d': '.42s' } as React.CSSProperties}><a className="primary-button" href="#projects">View My Work <ArrowRight size={19} /></a><a className="download-link" href={profile.resume} target="_blank" rel="noreferrer">Download CV <Download size={18} /></a></div><div className="availability rise" style={{ '--d': '.52s' } as React.CSSProperties}><span /><span>Open to opportunities</span><i /> <MapPin size={13} /> Lucknow, India</div></div>
-      <div className="hero-art" ref={heroArt} onMouseMove={tilt} onMouseLeave={untilt}><div className="orb" /><div className="window-glow" /><div className="scene"><Workstation /></div><div className="code-note">Code.<br />Create.<br />Innovate.<br /><span>Repeat.</span></div><div className="tech-tile tile-react"><Atom size={35} /><small>React</small></div><div className="tech-tile tile-node"><Braces /><small>Node.js</small></div><div className="tech-tile tile-js">JS</div><div className="tech-tile tile-ts">TS</div><div className="scene-caption"><span /><span>MY EVERYDAY WORKSPACE</span><span className="interact-hint">MOVE YOUR CURSOR ↗</span></div></div>
+      <div className="hero-art" ref={heroArt} onMouseMove={tilt} onMouseLeave={untilt}><div className="orb" /><div className="window-glow" /><div className="scene"><Workstation onLoaded={() => setIs3DLoaded(true)} /></div><div className="code-note">Code.<br />Create.<br />Innovate.<br /><span>Repeat.</span></div><div className="tech-tile tile-react"><Atom size={35} /><small>React</small></div><div className="tech-tile tile-node"><Braces /><small>Node.js</small></div><div className="tech-tile tile-js">JS</div><div className="tech-tile tile-ts">TS</div><div className="scene-caption"><span /><span>MY EVERYDAY WORKSPACE</span><span className="interact-hint">MOVE YOUR CURSOR ↗</span></div></div>
       <a className="scroll-cue" href="#about"><span>SCROLL TO DISCOVER</span><ArrowDown size={15} /></a><span className="hero-coordinate">DESIGNED WITH INTENT. BUILT WITH CODE.</span></section>
       <section className="about-panel content-shell" id="about" data-reveal><div data-reveal><p className="eyebrow">A LITTLE ABOUT ME</p><h2>Crafting Code,<br /><span>Creating Impact.</span></h2><a className="subtle-link" href={profile.resume} target="_blank" rel="noreferrer">More about me <ArrowUpRight size={16} /></a></div><div className="about-body" data-reveal style={{ '--d': '.15s' } as React.CSSProperties}><p>I&apos;m Ayush, a full-stack and mobile developer who loves turning ideas into things people can actually use. From MERN applications to Flutter experiences and applied AI, I connect the details to build a better whole.</p><div className="values"><div><Code2 /><span><strong>Clean Code</strong><small>Thoughtful, maintainable,<br />and built to grow.</small></span></div><div><Box /><span><strong>Problem Solver</strong><small>Complex challenges.<br />Simple experiences.</small></span></div></div></div><div className="about-art" aria-hidden="true" data-reveal style={{ '--d': '.3s' } as React.CSSProperties}><div className="about-orbit" /><div className="code-cube"><Code2 /></div><span>ALWAYS CURIOUS.<br />ALWAYS BUILDING.</span></div></section>
       <section className="skills-section content-shell section-space" id="skills"><div className="section-heading" data-reveal><div><p className="eyebrow">MY TOOLKIT</p><h2>The right tools.<br /><span>Endless possibilities.</span></h2></div><p>From the first pixel to the last API call,<br />a stack that brings ideas to life.</p></div><div className="skill-grid">{[{ icon: Code2, title: 'Frontend', tags: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'] }, { icon: Terminal, title: 'Backend', tags: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL'] }, { icon: Box, title: 'Mobile', tags: ['Flutter', 'Dart', 'Responsive UI'] }, { icon: Cpu, title: 'AI & Engineering', tags: ['Python', 'PyTorch', 'GitHub Actions', 'Vercel'] }].map((s, i) => <article className="skill-card" key={s.title} data-reveal style={{ '--d': `${i * 0.1}s` } as React.CSSProperties} onMouseMove={tilt} onMouseLeave={untilt}><s.icon /><h3>{s.title}</h3><div className="tags">{s.tags.map(t => <span key={t}>{t}</span>)}</div></article>)}</div></section>
@@ -52,4 +79,6 @@ export default function Portfolio() {
       <section className="contact-section content-shell" id="contact"><p className="eyebrow" data-reveal>HAVE SOMETHING IN MIND?</p><h2 data-reveal style={{ '--d': '.1s' } as React.CSSProperties}>Let&apos;s build something<br /><span>worth putting out there.</span></h2><a className="primary-button" href={`mailto:${profile.email}`} data-reveal style={{ '--d': '.2s' } as React.CSSProperties}>Let&apos;s talk <ArrowUpRight size={20} /></a><a className="contact-email" data-reveal style={{ '--d': '.3s' } as React.CSSProperties} href={`mailto:${profile.email}`}>{profile.email}</a></section>
     </main><footer className="content-shell"><a className="brand" href="#home">ak<span>.</span></a><p>Built with curiosity. Crafted with care.</p><span>© {new Date().getFullYear()} Ayush Kumar Yadav</span><a href="#home" aria-label="Back to top"><ArrowUpRight size={20} /></a></footer>
   </div>
+  </>
+  )
 }
