@@ -13,7 +13,40 @@ const sans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: 'Ayush Kumar Yadav | Full Stack & Mobile Developer',
   description: 'Thoughtful code. Useful things. Explore Ayush Kumar Yadav’s full-stack, mobile, and applied AI projects.',
-  generator: 'v0.app',
+  metadataBase: new URL('https://devtacet.me'),
+  alternates: {
+    canonical: '/',
+  },
+  keywords: ['Ayush Kumar Yadav', 'full stack developer', 'mobile developer', 'React developer', 'Next.js developer', 'applied AI', 'portfolio'],
+  authors: [{ name: 'Ayush Kumar Yadav', url: 'https://devtacet.me' }],
+  creator: 'Ayush Kumar Yadav',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    url: 'https://devtacet.me',
+    title: 'Ayush Kumar Yadav | Full Stack & Mobile Developer',
+    description: 'Explore Ayush Kumar Yadav’s full-stack, mobile, and applied AI projects.',
+    siteName: 'Ayush Kumar Yadav',
+    locale: 'en_US',
+    images: [{ url: '/images/engineering-stack.png', width: 1200, height: 630, alt: 'Ayush Kumar Yadav engineering portfolio' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ayush Kumar Yadav | Full Stack & Mobile Developer',
+    description: 'Explore Ayush Kumar Yadav’s full-stack, mobile, and applied AI projects.',
+    images: ['/images/engineering-stack.png'],
+  },
+  generator: 'Next.js',
   icons: {
     icon: [
       {
