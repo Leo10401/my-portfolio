@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import { ArrowRight, ArrowUpRight, ArrowDown, Code2, GitFork as Github, BriefcaseBusiness as Linkedin, Mail, Download, Sun, Moon, Menu, X, Box, Braces, MapPin, Terminal, Cpu, Atom } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, ArrowDown, Code2, GitFork as Github, BriefcaseBusiness as Linkedin, Mail, Download, Sun, Moon, Menu, X, Box, Braces, MapPin, Terminal, Cpu, Atom, Briefcase, GraduationCap, Building2, Calendar, Sparkles } from 'lucide-react'
 import { profile, projects } from '@/lib/portfolio-data'
 import SiteLoader from './site-loader'
 import { UplinkLoader } from '@designcodeio/threeui'
@@ -11,6 +11,39 @@ import '@designcodeio/threeui/style.css'
 
 const Workstation = dynamic(() => import('./workstation'), { ssr: false, loading: () => <div className="scene-loading">Setting up the workspace<span /></div> })
 const sections = ['Home', 'About', 'Skills', 'Projects', 'Experience', 'Contact']
+
+const timelineData = [
+  {
+    type: 'Education',
+    date: 'AUG 2025 — PRESENT',
+    isCurrent: true,
+    title: 'Master of Computer Applications',
+    place: 'Chandigarh University',
+    body: 'Specializing in advanced software design patterns, distributed cloud systems, machine learning architectures, and algorithmic optimization.',
+    skills: ['Machine Learning', 'System Design', 'Algorithms', 'Cloud Computing'],
+    icon: GraduationCap,
+  },
+  {
+    type: 'Experience',
+    date: 'FEB — AUG 2025',
+    isCurrent: false,
+    title: 'MERN Stack Developer Intern',
+    place: 'Digipodium · Remote',
+    body: 'Built and scaled full-stack web applications, REST APIs, and real-time administrative dashboards. Streamlined database aggregation pipelines in MongoDB and collaborated with cross-functional teams to automate continuous deployment.',
+    skills: ['React.js', 'Node.js', 'Express', 'MongoDB', 'REST APIs', 'Git'],
+    icon: Briefcase,
+  },
+  {
+    type: 'Education',
+    date: 'OCT 2022 — JUN 2025',
+    isCurrent: false,
+    title: 'Bachelor of Computer Applications',
+    place: 'Sherwood College of Professional Management',
+    body: 'Developed deep foundations in core computer science, object-oriented engineering, data structures, and database management systems.',
+    skills: ['Data Structures', 'OOP', 'DBMS', 'Web Architecture', 'C/C++'],
+    icon: GraduationCap,
+  },
+]
 
 export default function Portfolio() {
   const [light, setLight] = useState(false)
@@ -75,7 +108,81 @@ export default function Portfolio() {
       <section className="about-panel content-shell" id="about" data-reveal><div data-reveal><p className="eyebrow">A LITTLE ABOUT ME</p><h2>Crafting Code,<br /><span>Creating Impact.</span></h2><a className="subtle-link" href={profile.resume} target="_blank" rel="noreferrer">More about me <ArrowUpRight size={16} /></a></div><div className="about-body" data-reveal style={{ '--d': '.15s' } as React.CSSProperties}><p>I&apos;m Ayush, a full-stack and mobile developer who loves turning ideas into things people can actually use. From MERN applications to Flutter experiences and applied AI, I connect the details to build a better whole.</p><div className="values"><div><Code2 /><span><strong>Clean Code</strong><small>Thoughtful, maintainable,<br />and built to grow.</small></span></div><div><Box /><span><strong>Problem Solver</strong><small>Complex challenges.<br />Simple experiences.</small></span></div></div></div><div className="about-art" aria-hidden="true" data-reveal style={{ '--d': '.3s' } as React.CSSProperties}><div className="about-orbit" /><div className="code-cube"><Code2 /></div><span>ALWAYS CURIOUS.<br />ALWAYS BUILDING.</span></div></section>
       <section className="skills-section content-shell section-space" id="skills"><div className="section-heading" data-reveal><div><p className="eyebrow">MY TOOLKIT</p><h2>The right tools.<br /><span>Endless possibilities.</span></h2></div><p>From the first pixel to the last API call,<br />a stack that brings ideas to life.</p></div><div className="skill-grid">{[{ icon: Code2, title: 'Frontend', tags: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'] }, { icon: Terminal, title: 'Backend', tags: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL'] }, { icon: Box, title: 'Mobile', tags: ['Flutter', 'Dart', 'Responsive UI'] }, { icon: Cpu, title: 'AI & Engineering', tags: ['Python', 'PyTorch', 'GitHub Actions', 'Vercel'] }].map((s, i) => <article className="skill-card" key={s.title} data-reveal style={{ '--d': `${i * 0.1}s` } as React.CSSProperties} onMouseMove={tilt} onMouseLeave={untilt}><s.icon /><h3>{s.title}</h3><div className="tags">{s.tags.map(t => <span key={t}>{t}</span>)}</div></article>)}</div></section>
       <section className="content-shell section-space" id="projects"><div className="section-heading" data-reveal><div><p className="eyebrow">SELECTED WORK</p><h2>Ideas made <span>real.</span></h2></div><a className="subtle-link" href={profile.github} target="_blank" rel="noreferrer">Explore GitHub <ArrowUpRight size={17} /></a></div><div className="projects-grid">{projects.map((p, i) => <article className="project-card" key={p.slug} data-reveal style={{ '--d': `${(i % 3) * 0.12}s` } as React.CSSProperties} onMouseMove={tilt} onMouseLeave={untilt}><a className="project-image" href={p.live || p.github} target="_blank" rel="noreferrer"><Image src={p.image} alt={p.imageAlt} width={800} height={600} /><span className="project-visit"><ArrowUpRight /></span></a><div className="project-info"><p className="project-category">0{i + 1} / {p.category}</p><h3>{p.name}</h3><p>{p.description}</p><div className="project-bottom"><div className="tags">{p.stack.slice(0, 3).map(t => <span key={t}>{t}</span>)}</div><a href={p.github} target="_blank" rel="noreferrer" aria-label={`${p.name} source code`}><Github size={19} /></a></div></div></article>)}</div></section>
-      <section className="content-shell section-space experience-section" id="experience"><div data-reveal><p className="eyebrow">THE JOURNEY SO FAR</p><h2>Learning by<br /><span>shipping.</span></h2><p className="muted">Real projects. Collaborative teams.<br />A little better with every release.</p></div><div className="timeline">{[{ date: 'FEB — AUG 2025', title: 'MERN Stack Developer Intern', place: 'Digipodium · Remote', body: 'Built full-stack applications, REST APIs, and dashboards with design, backend, and QA teams. Automated deployments and optimized MongoDB queries.' }, { date: 'AUG 2025 — PRESENT', title: 'Master of Computer Applications', place: 'Chandigarh University', body: 'Exploring artificial intelligence, database systems, algorithms, and machine learning.' }, { date: 'OCT 2022 — JUN 2025', title: 'Bachelor of Computer Applications', place: 'Sherwood College of Professional Management', body: 'A foundation in system design, software development, and computer architecture.' }].map((e, i) => <article key={e.title} data-reveal style={{ '--d': `${i * 0.14}s` } as React.CSSProperties}><p className="eyebrow">{e.date}</p><h3>{e.title}</h3><span>{e.place}</span><p>{e.body}</p></article>)}</div></section>
+      <section className="content-shell section-space experience-section" id="experience">
+        <div className="experience-lead" data-reveal>
+          <p className="eyebrow"><Sparkles size={13} /> THE JOURNEY SO FAR</p>
+          <h2>Learning by<br /><span>shipping.</span></h2>
+          <p className="muted">
+            Real projects. Collaborative teams. A dedication to clean code, maintainable architectures, and measurable user impact with every release.
+          </p>
+          <div className="experience-stats">
+            <div className="stat-pill">
+              <span className="stat-num">3+</span>
+              <span className="stat-lbl">Years Building</span>
+            </div>
+            <div className="stat-pill">
+              <span className="stat-num">Full Stack</span>
+              <span className="stat-lbl">& Mobile Core</span>
+            </div>
+          </div>
+          <a className="subtle-link experience-cv-link" href={profile.resume} target="_blank" rel="noreferrer">
+            View Full Curriculum Vitae <ArrowUpRight size={15} />
+          </a>
+        </div>
+
+        <div className="timeline-wrapper">
+          <div className="timeline-spine" aria-hidden="true" />
+          <div className="timeline-items">
+            {timelineData.map((e, i) => {
+              const Icon = e.icon
+              return (
+                <article
+                  key={e.title}
+                  className="timeline-entry"
+                  data-reveal
+                  style={{ '--d': `${i * 0.12}s` } as React.CSSProperties}
+                  onMouseMove={tilt}
+                  onMouseLeave={untilt}
+                >
+                  <div className={`timeline-node ${e.isCurrent ? 'is-current' : ''}`}>
+                    <Icon size={16} />
+                    {e.isCurrent && <span className="node-beacon" />}
+                  </div>
+
+                  <div className="timeline-card">
+                    <div className="timeline-card-header">
+                      <span className="timeline-date-chip">
+                        <Calendar size={12} />
+                        {e.date}
+                      </span>
+                      <span className={`timeline-type-pill ${e.isCurrent ? 'is-active' : ''}`}>
+                        {e.isCurrent ? 'Present' : e.type}
+                      </span>
+                    </div>
+
+                    <h3 className="timeline-title">{e.title}</h3>
+
+                    <div className="timeline-meta">
+                      <Building2 size={14} />
+                      <span>{e.place}</span>
+                    </div>
+
+                    <p className="timeline-body">{e.body}</p>
+
+                    <div className="timeline-skills">
+                      {e.skills.map((s) => (
+                        <span key={s} className="skill-chip">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </div>
+      </section>
       <section className="contact-section content-shell" id="contact"><p className="eyebrow" data-reveal>HAVE SOMETHING IN MIND?</p><h2 data-reveal style={{ '--d': '.1s' } as React.CSSProperties}>Let&apos;s build something<br /><span>worth putting out there.</span></h2><a className="primary-button" href={`mailto:${profile.email}`} data-reveal style={{ '--d': '.2s' } as React.CSSProperties}>Let&apos;s talk <ArrowUpRight size={20} /></a><a className="contact-email" data-reveal style={{ '--d': '.3s' } as React.CSSProperties} href={`mailto:${profile.email}`}>{profile.email}</a></section>
     </main><footer className="content-shell"><a className="brand" href="#home">ak<span>.</span></a><p>Built with curiosity. Crafted with care.</p><span>© {new Date().getFullYear()} Ayush Kumar Yadav</span><a href="#home" aria-label="Back to top"><ArrowUpRight size={20} /></a></footer>
   </div>
